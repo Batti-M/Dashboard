@@ -7,6 +7,8 @@
             {{ error }}
         </div>
     </form>
+    <ChatWindow />
+
 </template>
 
 <script setup>
@@ -14,6 +16,7 @@ import { ref } from 'vue';
 import getUser from '@/composables/getUser';
 import { serverTimestamp } from 'firebase/firestore';
 import useCollection from '@/composables/useCollection';
+import ChatWindow from '@/components/ChatWindow.vue';
 
 const {error, addNewDocument} = useCollection('messages');
 const {user} = getUser();

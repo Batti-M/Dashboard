@@ -16,12 +16,12 @@ const getCollection = (collectionName) => {
         documents.value = results;
         error.value = null;
     }, (err) => {
-        // This is where you handle errors.
+       
         console.log(err);
         error.value = err.message;
     });
 
-    // Be sure to return the unsubscribe function so you can stop listening to updates when you're done.
+   
     return { error, documents, unsubscribe };
 }
 
