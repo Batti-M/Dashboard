@@ -5,11 +5,13 @@
             <p class="email">currently logged in as {{ user.email }}</p>
         </div>
         <button @click="handleClick">Log Out</button>
+        <button @click="seeAllMembers">See All Members</button>
     </nav>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
 import useLogout from '@/composables/useLogout'
 import getUser from '@/composables/getUser';
 
@@ -23,6 +25,10 @@ const handleClick = async() => {
     }
 }
 
+const router  = useRouter();
+const seeAllMembers = () => {
+    router.push('/teamMembers');
+}
 </script>
 
 <style>
