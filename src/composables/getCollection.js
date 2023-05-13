@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { db } from "@/firebase/config";
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 
@@ -20,6 +20,10 @@ const getCollection = (collectionName) => {
         console.log(err);
         error.value = err.message;
     });
+
+        watchEffect((onInvalidate) => {
+            onInvalidate(() => unsubscribe()); //onInvalidate is a function that runs when the component is unmounted
+        });
 
    
     return { error, documents, unsubscribe };
