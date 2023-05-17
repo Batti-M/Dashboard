@@ -3,36 +3,50 @@
     <table>
       <thead>
         <tr>
-          <th>Status</th>
           <th>Name</th>
+          <th>Status</th>
           <th>Email</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="member in teamMembers" :key="member.email">
-          <td>{{ member.status }}</td>
-          <td>{{ member.name }}</td>
-          <td>{{ member.email }}</td>
+        <tr v-for="user in users" :key="user.id">
+          <td>{{ user.displayName }}</td>
+          <td>{{ user.online ? 'Online' : 'Offline' }}</td>
+          <td>{{ user.email }}</td>
         </tr>
       </tbody>
     </table>
-
   </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  
- 
-  const teamMembers = ref([
-      { status: 'Active', name: 'John Doe', email: 'john.doe@example.com' },
-      { status: 'Inactive', name: 'Jane Doe', email: 'jane.doe@example.com' },
-      { status: 'Active', name: 'Bob Smith', email: 'bob.smith@example.com' },
-      { status: 'Active', name: 'Alice Johnson', email: 'alice.johnson@example.com' },
-      { status: 'Inactive', name: 'Charlie Brown', email: 'charlie.brown@example.com' },
-    ]);
-   
-  </script>
+</template>
+
+<script>
+import { ref, onMounted, onUnmounted } from 'vue'
+import { getFirestore, collection, onSnapshot } from 'firebase/firestore'
+
+export default {
+  setup() {
+    const db = getFirestore()
+    const users = ref([])
+
+    let unsubscribe = () => {}
+
+    onMounted(() => {
+      const usersCollection = collection(db, 'users')
+      unsubscribe = onSnapshot(usersCollection, (snapshot) => {
+        users.value = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      })
+    })
+
+    onUnmounted(() => {
+      // Detach the listener when the component is unmounted
+      unsubscribe()
+    })
+
+    return { users }
+  },
+}
+</script>
+
   
   <style scoped>
   table {
